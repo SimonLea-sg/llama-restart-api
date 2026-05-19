@@ -1,6 +1,7 @@
-# llama-control — TurboQuant-capable llama.cpp runtime with FastAPI control plane
-# Builds llama-server from the TurboQuant fork, then packages qllama as the public service.
-# Uses ubuntu24.04, 
+# Llama.cpp with Turbo Quant and MTP image plus an api app to restart llama-server with
+# select parameters without the need to restart the container.
+
+# Full build of llama.cpp & the api app.
 
 FROM nvidia/cuda:12.8.1-devel-ubuntu24.04 AS builder
 
