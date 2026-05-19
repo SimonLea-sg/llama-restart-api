@@ -100,11 +100,11 @@ curl -X POST http://localhost:8000/restart-llama \
 #### Put these in the -d '{}' section of the api call to set them and restart llama-server process. All are optional.  If not supplied the defaults will be used.
 
 * "m": "/models/[model name]"
-* "ngl": 36
+* "ngl": 99
 * "nn_cpu_moegl": 0
-* "cache_type_k": turbo3
+* "cache_type_k": "turbo3"
   * (Extra TQ options: turbo2, turbo3, turbo4)
-* "cache_type_v": turbo4
+* "cache_type_v": "turbo4"
   * (Extra TQ options: turbo2, turbo3, turbo4)
 * "no_mmap": [true/false]
 * "mlock": [true/false]

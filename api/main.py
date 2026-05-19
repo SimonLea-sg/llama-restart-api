@@ -27,7 +27,8 @@ def startup_event():
         no_mmap=app_settings.default_no_mmap,
         mlock=app_settings.default_mlock,
         jinja=app_settings.default_jinja,
-        ctx_size=app_settings.default_ctx_size
+        ctx_size=app_settings.default_ctx_size,
+        np=app_settings.default_np
     )
     
     # Start the process
@@ -62,7 +63,7 @@ def restart_llama(new_args: LlamaArgs, x_api_key: Optional[str] = Header(None)):
     # Logic for stopping and starting the process
     manager.stop_server()
     
-    # Give a brief moment for socket cleanup
+    # Give a brief moment for cleanup
     import time
     time.sleep(1)
     

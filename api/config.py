@@ -18,11 +18,12 @@ class LlamaArgs(BaseModel):
     cache_type_k: str = "f16"
     cache_type_v: str = "f16"
     n_cpu_moe: int = 0
-    ngl: int = 32
+    ngl: int = 99
     no_mmap: bool = False
     mlock: bool = False
     jinja: bool = False
     ctx_size: int = 2048
+    np: int = -1
 
     def to_command_list(self) -> List[str]:
         """Converts the Pydantic model into a list of command line arguments."""
@@ -31,10 +32,16 @@ class LlamaArgs(BaseModel):
         # Boolean flags: add flag if True
         if self.no_mmap:
             cmd.append("--no-mmap")
+        else:
+            cmd.append("-mmap")
         if self.mlock:
             cmd.append("--mlock")
+        else:
+            cmd.append("--no-mlock")
         if self.jinja:
             cmd.append("--jinja")
+        else:
+            cmd.append("--no-jinja")
             
         # String/Int flags
         if self.host:
@@ -49,7 +56,6 @@ class LlamaArgs(BaseModel):
             
         if self.n_cpu_moe > 0:
             cmd.extend(["--n-cpu-moe", str(self.n_cpu_moe)])
-            
         if self.ngl > 0:
             cmd.extend(["-ngl", str(self.ngl)])
             
@@ -59,6 +65,10 @@ class LlamaArgs(BaseModel):
         # Model path (-m)
         if self.m:
             cmd.extend(["-m", self.m])
+
+        # number of server slot (-np)
+        if self.np:
+            cmd.extend(["--np", str(self.np)])
             
         return cmd
 
@@ -71,14 +81,12 @@ class AppSettings(BaseSettings):
     default_cache_type_k: str = "f16"
     default_cache_type_v: str = "f16"
     default_n_cpu_moe: int = 0
-    default_ngl: int = 36
+    default_ngl: int = 99
     default_no_mmap: bool = False
     default_mlock: bool = False
     default_jinja: bool = False
     default_ctx_size: int = 4096
-    
-    # Socket path (assuming default for standard build)
-    socket_path: str = "/tmp/llama-server.sock"
+    default_np: int = -1  # -1 = auto
     
     # API Configuration
     api_keys: str = ""

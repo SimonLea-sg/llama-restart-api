@@ -11,7 +11,6 @@ class LlamaProcessManager:
     def __init__(self, settings: AppSettings):
         self.settings = settings
         self.process: Optional[subprocess.Popen] = None
-        self.socket_path = settings.socket_path
 
     def start_server(self, args: LlamaArgs):
         """Starts the llama-server subprocess with the given arguments."""
@@ -19,13 +18,11 @@ class LlamaProcessManager:
             logger.warning("Server already running. Please restart first.")
             print("Server already running. Please restart first.")
             return False
-        
-        print("Start Server args received: ", args)
 
         command = ["/usr/local/bin/llama-server"] + args.to_command_list()
 
         logger.info(f"Starting server with: {' '.join(command)}")
-        print("Starting server with: ", command)
+        print("[Print] - Starting server with: ", command)
 
         try:
             # Create new process
@@ -64,13 +61,6 @@ class LlamaProcessManager:
             self.process.wait()
             
         self.process = None
-        
-        # Cleanup socket file
-        if os.path.exists(self.socket_path):
-            try:
-                os.remove(self.socket_path)
-            except OSError:
-                pass
 
     def check_health(self) -> dict:
         """
