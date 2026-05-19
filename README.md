@@ -25,12 +25,14 @@ Using http calls you can set llama.cpp startup options and restart llama-server 
 #### Setup
 
 * Clone this repository to a Linux server
-* cd llama-cpp-tq-docker-easyllama
+* cd llama-restart-api
 * Copy ./docker/dot-env-example ./docker/.env
 * If using authentication (default) then generate an APIKey.
   * A quick and easy way to generate an APIKey in Linux "openssl rand -hex 32"
 * Edit ./docker/.env and set any environment variables on startup.
 * Set your API key(s) to enable API authentication.
+
+***Note***: To build an intermediate image for use with multiple app based on TheTom's version of llama.cpp with tubo quant and mtp, visit my [llama-tq-docker-build](https://github.com/SimonLea-sg/llama-tq-docker-build/tree/main) repo.
 
 ### Grab a model and put it in a place you will map in to the container.
 
@@ -40,7 +42,14 @@ Default in the config.py file is mistralai_Mistral-Small-3.2-24B-Instruct-2506-Q
 
 ### Build the image (from scratch, remove  --no-cache for updating the build):
 
-`docker build  --no-cache -t easy-llama -f ./docker/Dockerfile .`
+[Dockerfile]
+- llama-server-api.Dockerfile: Builds llama.cpp llama-server app and installs the api app.
+- llama-all-api.Dockerfile: Builds the full llama.cpp toolset and installs the api app.
+- api-only.Dockerfile: Uses an intermediate llama.cpp image and adds the api app (much shorter build time).  
+
+  See the ***note*** above for instructions to build the intermediate image.
+
+`docker build  --no-cache -t easy-llama -f ./docker/[Dockerfile] .`
 
 ### Creating and Running a Container:
 
@@ -140,6 +149,14 @@ curl --request POST \
 ```
 
 #### For a lot more options, take a look at the ggml.org GitHub Llama Server [README](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md)
+
+---
+
+## llama.cpp with Turbo Quant source:
+
+Thanks to Tom Turney for making his llama.cpp build with Turbo Quant available for use by all.
+
+TheTom: [llama-cpp-turboquant](https://github.com/TheTom/llama-cpp-turboquant)
 
 
 
