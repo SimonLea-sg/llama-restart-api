@@ -49,7 +49,7 @@ Default in the config.py file is mistralai_Mistral-Small-3.2-24B-Instruct-2506-Q
 
   See the ***note*** above for instructions to build the intermediate image.
 
-`docker build  --no-cache -t easy-llama -f ./docker/[Dockerfile] .`
+`docker build  --no-cache -t llama-restart-api -f ./docker/[Dockerfile] .`
 
 ### Creating and Running a Container:
 
