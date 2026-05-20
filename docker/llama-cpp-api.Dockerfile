@@ -84,8 +84,8 @@ RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8000 8080
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=20s --retries=3 \
-  CMD curl -fsS http://localhost:8000/health >/dev/null || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD bash -c 'curl -fsS http://localhost:8000/health && pgrep -x llama-server > /dev/null || exit 1'
 
 ENTRYPOINT ["/app/entrypoint.sh"]
 

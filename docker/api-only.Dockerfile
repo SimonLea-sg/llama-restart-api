@@ -19,15 +19,16 @@ RUN apt-get update && \
     apt-get install -y python3 python3-pip python3-venv && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy api files
+# Copy files
 COPY api/ docker/.env ./docker/entrypoint.sh /app/api/
+COPY ./docker/entrypoint.sh /app/
 
 # Setup Python
 RUN python3 -m venv .venv \
     && . .venv/bin/activate \
     && python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel \
-    && pip3 install --no-cache-dir -r /api/requirements.txt \
-    && rm /app/requirements.txt
+    && pip3 install --no-cache-dir -r /app/api/requirements.txt \
+    && rm /app/api/requirements.txt
 
 # Final settings
 RUN mkdir -p /models \
@@ -35,7 +36,7 @@ RUN mkdir -p /models \
 
 EXPOSE 8000 8080
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=20s --retries=3 \
-  CMD curl -fsS http://localhost:8000/health >/dev/null || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD bash -c 'curl -fsS http://localhost:8000/health && pgrep -x llama-server > /dev/null || exit 1'
 
 ENTRYPOINT ["/app/entrypoint.sh"]
