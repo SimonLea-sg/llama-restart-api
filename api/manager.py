@@ -16,13 +16,12 @@ class LlamaProcessManager:
         """Starts the llama-server subprocess with the given arguments."""
         if self.process and self.process.poll() is None:
             logger.warning("Server already running. Please restart first.")
-            print("Server already running. Please restart first.")
             return False
 
-        command = ["/usr/local/bin/llama-server"] + args.to_command_list()
+        command = ["/app/llama-server"] + args.to_command_list()
 
-        logger.info(f"Starting server with: {' '.join(command)}")
-        print("[Print] - Starting server with: ", command)
+        logger.info(f"Starting server with: {' '.join(str(command))}")
+        print("[Print] - Starting server with: ", str(command))
 
         try:
             # Create new process

@@ -40,21 +40,8 @@ signal.signal(signal.SIGINT, _handle_sigterm)
 @app.on_event("startup")
 async def startup_event():
     """Start the llama‑server when the FastAPI app starts."""
-    default_args = LlamaArgs(
-        m=app_settings.default_model,
-        host=app_settings.default_host,
-        port=app_settings.default_port,
-        cache_type_k=app_settings.default_cache_type_k,
-        cache_type_v=app_settings.default_cache_type_v,
-        n_cpu_moe=app_settings.default_n_cpu_moe,
-        ngl=app_settings.default_ngl,
-        n_gpu_layers=app_settings.default_n_gpu_layers,
-        no_mmap=app_settings.default_no_mmap,
-        mlock=app_settings.default_mlock,
-        jinja=app_settings.default_jinja,
-        ctx_size=app_settings.default_ctx_size,
-        np=app_settings.default_np,
-    )
+    default_args = LlamaArgs(app_default=app_settings)
+
     success = manager.start_server(default_args)
     if success:
         logger.info("Llama server started successfully.")
@@ -104,3 +91,13 @@ def restart_llama(new_args: LlamaArgs, x_api_key: Optional[str] = Header(None)):
         return {"status": "restarting", "message": "Process restarting with new parameters."}
     else:
         raise HTTPException(status_code=500, detail="Failed to start server.")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        app,
+        host=app_settings.default_host,
+        port=8000,
+        log_level=os.getenv("LOG_LEVEL", "info")
+    )
+
